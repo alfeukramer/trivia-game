@@ -1,11 +1,11 @@
-const initialState = { a: 'a' };
+const initialState = { token: '' };
 
 const logRdc = (state = initialState, action) => {
   switch (action.type) {
   case 'LOGIN_ACTION':
     return {
       ...state,
-      a: action.payload,
+      token: action.payload,
     };
   default:
     return {

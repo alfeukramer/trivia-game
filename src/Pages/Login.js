@@ -1,4 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { loginAction, tokenThunk } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -7,12 +11,20 @@ class Login extends React.Component {
       name: '',
       email: '',
       isDisabled: true,
+      redirect: false,
     };
     this.handleChange = this.handleChange.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   componentDidUpdate() {
     this.buttonValidation();
+  }
+
+  async onClick() {
+    const { sendToken } = this.props;
+    await sendToken();
+    this.setState({ redirect: true });
   }
 
   handleChange({ target }) {
@@ -33,9 +45,10 @@ class Login extends React.Component {
   }
 
   render() {
-    const { name, email, isDisabled } = this.state;
+    const { name, email, isDisabled, redirect } = this.state;
     return (
       <div>
+        {redirect && <Redirect to="/game" />}
         <form>
           <label htmlFor="name">
             Name
@@ -58,9 +71,10 @@ class Login extends React.Component {
             />
           </label>
           <button
-            type="submit"
+            type="button"
             data-testid="btn-play"
             disabled={ isDisabled }
+            onClick={ this.onClick }
           >
             Play
           </button>
@@ -70,4 +84,12 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  sendToken: () => dispatch(tokenThunk(loginAction)),
+});
+
+Login.propTypes = {
+  sendToken: PropTypes.func.isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(Login);

@@ -9,7 +9,7 @@ ReactDOM.render(
   <Provider store={ store }>
     <BrowserRouter>
       <Switch>
-        <Route path="/" component={ App } />
+        <Route exact path="/" component={ App } />
       </Switch>
     </BrowserRouter>
   </Provider>,
