@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { loginAction, tokenThunk } from '../redux/actions';
 
@@ -76,6 +76,14 @@ class Login extends React.Component {
             disabled={ isDisabled }
             onClick={ this.onClick }
           >
+            <Link to="/settings">
+              <button
+                type="button"
+                data-testid="btn-settings"
+              >
+                Configuração
+              </button>
+            </Link>
             Play
           </button>
         </form>

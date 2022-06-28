@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import App from './App';
+import Settings from './Pages/Settings';
 import store from './redux/store';
 
 ReactDOM.render(
@@ -10,6 +11,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={ App } />
+        <Route path="/settings" component={ Settings } />
       </Switch>
     </BrowserRouter>
   </Provider>,
