@@ -10,15 +10,22 @@ state = {
   hashValidate: true,
   questionsIndex: 0,
   loading: true,
+  correctBackground: 'white',
+  incorrectBackground: 'white',
+  answers: [],
 };
 
   componentDidMount = async () => {
     await this.request();
-    const { questions } = this.state;
-    console.log('request', questions);
     this.setState({
       loading: false,
     });
+    this.answers();
+  }
+
+  onClick = () => {
+    this.setState({ correctBackground: 'rgb(6, 240, 15)',
+      incorrectBackground: 'red' });
   }
 
   request = async () => {
@@ -26,7 +33,6 @@ state = {
     const URL = `https://opentdb.com/api.php?amount=5&token=${token}`;
     const requisicao = await fetch(URL);
     const requisicaoJson = await requisicao.json();
-    console.log('json', requisicaoJson);
     this.setState({
       questions: requisicaoJson,
     });
@@ -53,10 +59,8 @@ state = {
     const qstSelect = questions.results ? (
       questions.results.find((qst, index) => (index === questionsIndex))
     ) : '';
-    console.log('fgaf', qstSelect);
     const respostas = [...qstSelect.incorrect_answers, qstSelect.correct_answer];
     const respostasNew = [];
-    this.shuffleArray(respostas);
     respostas.forEach((resposta, index) => {
       const value = resposta === qstSelect.correct_answer ? ('correct-answer')
         : `wrong-answer-${index}`;
@@ -67,16 +71,18 @@ state = {
       respostasNew.push(obj);
     });
     this.shuffleArray(respostasNew);
-    return respostasNew;
+    console.log('a');
+    this.setState({ answers: respostasNew });
   }
 
   render() {
-    const { hashValidate, questions, questionsIndex, loading } = this.state;
+    const { hashValidate, questions,
+      questionsIndex, loading,
+      correctBackground, incorrectBackground, answers } = this.state;
 
     const qstSelect = !loading ? (
       questions.results.find((qst, index) => (index === questionsIndex))
     ) : '';
-    console.log(questions);
     return (
       <div>
         {
@@ -94,15 +100,22 @@ state = {
               </p>
 
               <ul data-testid="answer-options">
-                {this.answers().map((resp, index) => (
-                  <button
-                    data-testid={ resp.testId }
-                    key={ index }
-                    type="button"
-                  >
-                    {resp.resposta}
-                  </button>
-                ))}
+                {answers.map((resp, index) => {
+                  const value = resp.testId === 'correct-answer' ? (
+                    correctBackground) : incorrectBackground;
+                  return (
+                    <button
+                      data-testid={ resp.testId }
+                      style={ { backgroundColor: value,
+                        border: value !== 'white' && `3px solid ${value}` } }
+                      key={ index }
+                      type="button"
+                      onClick={ this.onClick }
+                    >
+                      {resp.resposta}
+                    </button>
+                  );
+                })}
               </ul>
             </div>
           )
