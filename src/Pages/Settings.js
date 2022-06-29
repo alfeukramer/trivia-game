@@ -2,8 +2,8 @@ import React from 'react';
 
 class Settings extends React.Component {
   render() {
-    return (<div data-testid="settings-title" />);
+    return (<div data-testid="settings-title"> Configurações</div>);
   }
 }
-// a
+
 export default Settings;

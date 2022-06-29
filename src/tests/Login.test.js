@@ -10,11 +10,16 @@ const data = {
   "token":"f00cb469ce38726ee00a7c6836761b0a4fb808181a125dcde6d50a9f3c9127b6"
 };
 
-const mockFetch = global.fetch = jest.fn(async () => ({
-  json: async () => data
-}));
+const mockFetch = () => {
+  jest.spyOn(global, 'fetch')
+  .mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve(data),
+  }));
+};
 
 describe('Teste da página Login', () => {
+  beforeEach(mockFetch)
+  afterEach(() => jest.clearAllMocks());
   test('Verifica se os inputs estão renderizados', () => {
     renderWithRouterAndRedux(<App />);
     const inputName = screen.getByTestId('input-player-name');
@@ -30,12 +35,16 @@ describe('Teste da página Login', () => {
     userEvent.type(inputEmail, 'lucaslindao@hotmail.com');
     expect(buttonPlay).not.toBeDisabled();
   });
-  // test('Verifica o butão Play', async () => {
-  //   renderWithRouterAndRedux(<App />)
-  //   const buttonPlay = await screen.findByTestId('btn-play')
-  //   userEvent.click(buttonPlay);
-  //   expect(global.fetch).toHaveBeenCalled();
-  // });
+  test('Verifica o butão Play', async () => {
+    renderWithRouterAndRedux(<App />)
+    const buttonPlay = screen.getByTestId('btn-play')
+    const inputName = screen.getByTestId('input-player-name');
+    const inputEmail = screen.getByTestId('input-gravatar-email');
+    userEvent.type(inputName, 'Lucas');
+    userEvent.type(inputEmail, 'lucaslindao@hotmail.com');
+    userEvent.click(buttonPlay);
+    expect(global.fetch).toHaveBeenCalled();
+  });
   test(`Verifica se o butão "configuração"
   redireciona para a página correta`, () => {
     const { history } = renderWithRouterAndRedux(<App />);
@@ -49,7 +58,7 @@ describe('Teste da página Login', () => {
     renderWithRouterAndRedux(<App />);
     const buttonSettings = screen.getByTestId('btn-settings');
     userEvent.click(buttonSettings);
-    const divSeting = screen.getByTestId('settings-title');
-    expect(divSeting).toBeInTheDocument();
+    const divSeting = screen.findByTestId('settings-title');
+    expect(divSeting).toBeDefined();
   });
 })

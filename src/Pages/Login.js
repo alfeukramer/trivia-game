@@ -76,16 +76,16 @@ class Login extends React.Component {
             disabled={ isDisabled }
             onClick={ this.onClick }
           >
-            <Link to="/settings">
-              <button
-                type="button"
-                data-testid="btn-settings"
-              >
-                Configuração
-              </button>
-            </Link>
             Play
           </button>
+          <Link to="/settings">
+            <button
+              type="button"
+              data-testid="btn-settings"
+            >
+              Configuração
+            </button>
+          </Link>
         </form>
       </div>
     );
