@@ -23,7 +23,8 @@ class Login extends React.Component {
 
   async onClick() {
     const { sendToken } = this.props;
-    await sendToken();
+    const { name, email } = this.state;
+    await sendToken(name, email);
     this.setState({ redirect: true });
   }
 
@@ -93,7 +94,7 @@ class Login extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  sendToken: () => dispatch(tokenThunk(loginAction)),
+  sendToken: (name, email) => dispatch(tokenThunk(name, email, loginAction)),
 });
 
 Login.propTypes = {
