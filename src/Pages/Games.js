@@ -13,6 +13,7 @@ state = {
   correctBackground: 'white',
   incorrectBackground: 'white',
   answers: [],
+  disableButtons: false,
 };
 
   componentDidMount = async () => {
@@ -21,6 +22,7 @@ state = {
       loading: false,
     });
     this.answers();
+    this.timerFunction();
   }
 
   onClick = () => {
@@ -71,14 +73,26 @@ state = {
       respostasNew.push(obj);
     });
     this.shuffleArray(respostasNew);
-    console.log('a');
     this.setState({ answers: respostasNew });
+  }
+
+  timerFunction = () => {
+    const endTime = 30000;
+    setTimeout(() => {
+      const { correctBackground } = this.state;
+      if (correctBackground === 'white') {
+        this.setState({
+          correctBackground: 'rgb(6, 240, 15)',
+          incorrectBackground: 'red',
+          disableButtons: true });
+      }
+    }, endTime);
   }
 
   render() {
     const { hashValidate, questions,
       questionsIndex, loading,
-      correctBackground, incorrectBackground, answers } = this.state;
+      correctBackground, incorrectBackground, answers, disableButtons } = this.state;
 
     const qstSelect = !loading ? (
       questions.results.find((qst, index) => (index === questionsIndex))
@@ -111,6 +125,7 @@ state = {
                       key={ index }
                       type="button"
                       onClick={ this.onClick }
+                      disabled={ disableButtons }
                     >
                       {resp.resposta}
                     </button>
