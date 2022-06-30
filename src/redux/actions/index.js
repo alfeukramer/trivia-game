@@ -1,3 +1,5 @@
+import md5 from 'crypto-js/md5';
+
 export const LOGIN_ACTION = 'LOGIN_ACTION';
 
 export const loginAction = (token, name, email) => ({
@@ -11,6 +13,16 @@ export function tokenThunk(name, email, func) {
     const response = await fetch(URL);
     const json = await response.json();
     const { token } = json;
+    const ranking = JSON.parse(localStorage.getItem('ranking'));
+    const userHash = md5(email).toString();
+    const picture = `https://www.gravatar.com/avatar/${userHash}`;
+    if (ranking) {
+      const newRanking = [...ranking, { name, score: 0, picture }];
+      localStorage.setItem('ranking', JSON.stringify(newRanking));
+    } else {
+      const newRanking = [{ name, score: 0, picture }];
+      localStorage.setItem('ranking', JSON.stringify(newRanking));
+    }
     localStorage.setItem('token', token);
     dispatch(func(token, name, email));
   };
