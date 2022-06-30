@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Header from '../Components/Header';
 import { updateScore } from '../redux/actions';
 
@@ -18,6 +18,7 @@ state = {
   answers: [],
   disableButtons: false,
   seconds: 30,
+  isHidden: true,
 };
 
   componentDidMount = async () => {
@@ -60,6 +61,26 @@ state = {
       }
       scoreAction(valorFinal);
     }
+    this.setState({
+      isHidden: false,
+    });
+  }
+
+  nextClick = () => {
+    let { questionsIndex } = this.state;
+    this.setState({
+      questionsIndex: questionsIndex += 1,
+      correctBackground: 'white',
+      incorrectBackground: 'white',
+      seconds: 30,
+    });
+    this.answers();
+    this.timerFunction();
+    const timer = 1000;
+    this.scoreTimer = setInterval(() => {
+      this.setState((prevState) => ({ seconds: prevState.seconds - 1 }));
+    }, timer);
+    clearInterval(this.scoreTimer);
   }
 
   request = async () => {
@@ -116,16 +137,18 @@ state = {
         this.setState({
           correctBackground: 'rgb(6, 240, 15)',
           incorrectBackground: 'red',
-          disableButtons: true });
+          disableButtons: true,
+          isHidden: false });
       }
     }, endTime);
   }
 
   render() {
+    const lastQuestion = 4;
     const { hashValidate, questions,
       questionsIndex, loading,
       correctBackground, incorrectBackground, answers,
-      disableButtons } = this.state;
+      disableButtons, isHidden } = this.state;
     const qstSelect = !loading ? (
       questions.results.find((qst, index) => (index === questionsIndex))
     ) : '';
@@ -167,6 +190,25 @@ state = {
             </div>
           )
         }
+        { !isHidden && questionsIndex < lastQuestion && (
+          <button
+            type="button"
+            data-testid="btn-next"
+            onClick={ this.nextClick }
+          >
+            Next
+          </button>
+        )}
+        <Link to="/feedback">
+          { questionsIndex === lastQuestion && (
+            <button
+              type="button"
+              data-testid="btn-next"
+            >
+              Next
+            </button>
+          )}
+        </Link>
       </div>
     );
   }
