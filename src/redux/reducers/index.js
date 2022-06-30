@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import logRdc from './login';
+import player from './login';
 
-const rootReducer = combineReducers({ logRdc });
+const rootReducer = combineReducers({ player });
 
 export default rootReducer;
