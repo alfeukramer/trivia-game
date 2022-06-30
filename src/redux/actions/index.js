@@ -1,11 +1,20 @@
 import md5 from 'crypto-js/md5';
 
 export const LOGIN_ACTION = 'LOGIN_ACTION';
+export const UPDATE_SCORE = 'UPDATE_SCORE';
 
 export const loginAction = (token, name, email) => ({
   type: LOGIN_ACTION,
   payload: { token, name, email },
 });
+
+export const updateScore = (numero) => {
+  console.log(numero);
+  return {
+    type: UPDATE_SCORE,
+    payload: numero,
+  };
+};
 
 export function tokenThunk(name, email, func) {
   return async (dispatch) => {
