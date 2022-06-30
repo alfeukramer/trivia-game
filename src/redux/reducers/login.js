@@ -1,4 +1,12 @@
-const initialState = { token: '', name: '', email: '' };
+const initialState = {
+  player: {
+    name: '',
+    assertions: '',
+    score: '',
+    gravatarEmail: '',
+  },
+  token: '',
+};
 
 const logRdc = (state = initialState, action) => {
   switch (action.type) {
@@ -6,8 +14,11 @@ const logRdc = (state = initialState, action) => {
     return {
       ...state,
       token: action.payload.token,
-      name: action.payload.name,
-      email: action.payload.email,
+      player: {
+        ...state.player,
+        name: action.payload.name,
+        gravatarEmail: action.payload.email,
+      },
     };
   default:
     return {
