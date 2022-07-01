@@ -7,6 +7,7 @@ import Games from './Pages/Games';
 import Feedback from './Pages/Feedback';
 import Settings from './Pages/Settings';
 import store from './redux/store';
+import Ranking from './Pages/Ranking';
 
 ReactDOM.render(
   <Provider store={ store }>
@@ -16,6 +17,7 @@ ReactDOM.render(
         <Route path="/settings" component={ Settings } />
         <Route path="/game" component={ Games } />
         <Route path="/feedback" component={ Feedback } />
+        <Route path="/ranking" component={ Ranking } />
       </Switch>
     </BrowserRouter>
   </Provider>,

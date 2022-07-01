@@ -26,10 +26,10 @@ export function tokenThunk(name, email, func) {
     const userHash = md5(email).toString();
     const picture = `https://www.gravatar.com/avatar/${userHash}`;
     if (ranking) {
-      const newRanking = [...ranking, { name, score: 0, picture }];
+      const newRanking = [...ranking, { name, assertions: 0, score: 0, picture }];
       localStorage.setItem('ranking', JSON.stringify(newRanking));
     } else {
-      const newRanking = [{ name, score: 0, picture }];
+      const newRanking = [{ name, assertions: 0, score: 0, picture }];
       localStorage.setItem('ranking', JSON.stringify(newRanking));
     }
     localStorage.setItem('token', token);
