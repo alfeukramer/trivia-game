@@ -27,7 +27,6 @@ state = {
       loading: false,
     });
     this.answers();
-    this.timerFunction();
     const timer = 1000;
     this.scoreTimer = setInterval(() => {
       this.setState((prevState) => ({ seconds: prevState.seconds - 1 }));
@@ -38,6 +37,18 @@ state = {
     const { seconds } = this.state;
     if (seconds === 0) {
       clearInterval(this.scoreTimer);
+      this.timerOut();
+    }
+  }
+
+  timerOut = () => {
+    const { correctBackground } = this.state;
+    if (correctBackground === 'white') {
+      this.setState({
+        correctBackground: 'rgb(6, 240, 15)',
+        incorrectBackground: 'red',
+        disableButtons: true,
+        isHidden: false });
     }
   }
 
@@ -60,10 +71,26 @@ state = {
         valorFinal += pontoFixo + seconds;
       }
       scoreAction(valorFinal);
+      this.updateStorage(valorFinal);
     }
     this.setState({
       isHidden: false,
     });
+  }
+
+  updateStorage = (score) => {
+    const { name } = this.props;
+    const ranking = JSON.parse(localStorage.getItem('ranking'));
+    const playerInfo = ranking.find((player) => player.name === name);
+    const rankingClone = [...ranking];
+    const sumAssertion = playerInfo.assertions + 1;
+    const sumScore = playerInfo.score + score;
+    const playerIndex = rankingClone.indexOf(playerInfo);
+    rankingClone[playerIndex] = { ...playerInfo,
+      assertions: sumAssertion,
+      score: sumScore,
+    };
+    localStorage.setItem('ranking', JSON.stringify(rankingClone));
   }
 
   nextClick = () => {
@@ -73,14 +100,16 @@ state = {
       correctBackground: 'white',
       incorrectBackground: 'white',
       seconds: 30,
+      disableButtons: false,
+      isHidden: true,
+    }, () => {
+      this.answers();
+      const timer = 1000;
+      this.scoreTimer = setInterval(() => {
+        this.setState((prevState) => ({ seconds: prevState.seconds - 1 }));
+      }, timer);
+      // clearInterval(this.scoreTimer);
     });
-    this.answers();
-    this.timerFunction();
-    const timer = 1000;
-    this.scoreTimer = setInterval(() => {
-      this.setState((prevState) => ({ seconds: prevState.seconds - 1 }));
-    }, timer);
-    clearInterval(this.scoreTimer);
   }
 
   request = async () => {
@@ -127,20 +156,6 @@ state = {
     });
     this.shuffleArray(respostasNew);
     this.setState({ answers: respostasNew });
-  }
-
-  timerFunction = () => {
-    const endTime = 30000;
-    setTimeout(() => {
-      const { correctBackground } = this.state;
-      if (correctBackground === 'white') {
-        this.setState({
-          correctBackground: 'rgb(6, 240, 15)',
-          incorrectBackground: 'red',
-          disableButtons: true,
-          isHidden: false });
-      }
-    }, endTime);
   }
 
   render() {
@@ -217,10 +232,12 @@ state = {
 Games.propTypes = {
   token: PropTypes.string.isRequired,
   scoreAction: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   token: state.player.token,
+  name: state.player.name,
 });
 
 const mapDispatchToProps = (dispatch) => ({

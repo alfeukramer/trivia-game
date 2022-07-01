@@ -1,6 +1,6 @@
 const initialState = {
   name: '',
-  assertions: '',
+  assertions: 0,
   score: 0,
   gravatarEmail: '',
   token: '',
@@ -16,11 +16,14 @@ const player = (state = initialState, action) => {
       gravatarEmail: action.payload.email,
     };
   case 'UPDATE_SCORE': {
-    const { score } = state;
+    const { score, assertions } = state;
     const newScore = score + action.payload;
+    const newAssertions = assertions + 1;
     return {
       ...state,
       score: newScore,
+      assertions: newAssertions,
+
     };
   }
   default:
