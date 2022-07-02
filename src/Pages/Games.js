@@ -19,6 +19,7 @@ state = {
   disableButtons: false,
   seconds: 30,
   isHidden: true,
+  stopTimer: false,
 };
 
   componentDidMount = async () => {
@@ -34,16 +35,17 @@ state = {
   }
 
   componentDidUpdate = () => {
-    const { seconds } = this.state;
-    if (seconds === 0) {
+    const { seconds, stopTimer } = this.state;
+    if (seconds === 0 || stopTimer) {
       clearInterval(this.scoreTimer);
       this.timerOut();
     }
   }
 
   timerOut = () => {
-    const { correctBackground } = this.state;
-    if (correctBackground === 'white') {
+    const { correctBackground, stopTimer } = this.state;
+    this.setState({ stopTimer: false, seconds: 30 });
+    if (correctBackground === 'white' && !stopTimer) {
       this.setState({
         correctBackground: 'rgb(6, 240, 15)',
         incorrectBackground: 'red',
@@ -102,6 +104,7 @@ state = {
       seconds: 30,
       disableButtons: false,
       isHidden: true,
+      stopTimer: true,
     }, () => {
       this.answers();
       const timer = 1000;
@@ -148,10 +151,7 @@ state = {
     respostas.forEach((resposta, index) => {
       const value = resposta === qstSelect.correct_answer ? (correctAnswer)
         : `wrong-answer-${index}`;
-      const obj = {
-        resposta,
-        testId: value,
-      };
+      const obj = { resposta, testId: value };
       respostasNew.push(obj);
     });
     this.shuffleArray(respostasNew);
