@@ -8,13 +8,10 @@ export const loginAction = (token, name, email) => ({
   payload: { token, name, email },
 });
 
-export const updateScore = (numero) => {
-  console.log(numero);
-  return {
-    type: UPDATE_SCORE,
-    payload: numero,
-  };
-};
+export const updateScore = (numero) => ({
+  type: UPDATE_SCORE,
+  payload: numero,
+});
 
 export function tokenThunk(name, email, func) {
   return async (dispatch) => {
