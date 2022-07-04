@@ -1,8 +1,9 @@
 import React from 'react';
 import App from '../App'
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
+import Login from '../Pages/Login';
 
 const data = {
   "response_code":0,
@@ -18,7 +19,7 @@ const mockFetch = () => {
 };
 
 describe('Teste da página Login', () => {
-  beforeEach(mockFetch)
+  beforeEach(mockFetch);
   afterEach(() => jest.clearAllMocks());
   test('Verifica se os inputs estão renderizados', () => {
     renderWithRouterAndRedux(<App />);
@@ -35,8 +36,34 @@ describe('Teste da página Login', () => {
     userEvent.type(inputEmail, 'lucaslindao@hotmail.com');
     expect(buttonPlay).not.toBeDisabled();
   });
-  test('Verifica o butão Play', async () => {
-    renderWithRouterAndRedux(<App />)
+  test('Testa se o botão fica desabilitando com um input vazio', () => {
+   const { history } = renderWithRouterAndRedux(<App />);
+    const buttonPlay = screen.getByTestId('btn-play')
+    const inputName = screen.getByTestId('input-player-name');
+    const inputEmail = screen.getByTestId('input-gravatar-email');
+    expect(buttonPlay).toBeDisabled();
+
+    userEvent.type(inputName, 'Lucas');
+    userEvent.type(inputEmail, '');
+    expect(buttonPlay).toBeDisabled();
+  })
+  test('Verifica se o botão fica habilitado ao preencher os dois inputs', () => {
+    renderWithRouterAndRedux(<App />);
+    const buttonPlay = screen.getByTestId('btn-play')
+    const inputName = screen.getByTestId('input-player-name');
+    const inputEmail = screen.getByTestId('input-gravatar-email');
+    userEvent.type(inputName, '');
+    userEvent.type(inputEmail, 'lucaslindo@gmail.com'); 
+    expect(buttonPlay).toBeDisabled();
+    userEvent.type(inputName, 'Lucas');
+    userEvent.type(inputEmail, 'lucaslindo@gmail.com');
+    expect(buttonPlay).not.toBeDisabled();
+    fireEvent.change(inputName, { target: { value: '' } });
+    expect(buttonPlay).toBeDisabled();
+
+  })
+  test('Verifica o botão Play', async () => {
+    renderWithRouterAndRedux(<Login />)
     const buttonPlay = screen.getByTestId('btn-play')
     const inputName = screen.getByTestId('input-player-name');
     const inputEmail = screen.getByTestId('input-gravatar-email');
@@ -45,7 +72,7 @@ describe('Teste da página Login', () => {
     userEvent.click(buttonPlay);
     expect(global.fetch).toHaveBeenCalled();
   });
-  test(`Verifica se o butão "configuração"
+  test(`Verifica se o botão "configuração"
   redireciona para a página correta`, () => {
     const { history } = renderWithRouterAndRedux(<App />);
     const buttonSettings = screen.getByTestId('btn-settings');
@@ -54,11 +81,10 @@ describe('Teste da página Login', () => {
     expect(pathname).toEqual("/settings");
     
   });
-  test('', () => {
-    renderWithRouterAndRedux(<App />);
+  test('Testa se é redirecionado para a página de configurações ao clicar no botão',  async() => {
+    const { history } = renderWithRouterAndRedux(<App />);
     const buttonSettings = screen.getByTestId('btn-settings');
     userEvent.click(buttonSettings);
-    const divSeting = screen.findByTestId('settings-title');
-    expect(divSeting).toBeDefined();
+    expect(history.location.pathname).toEqual('/settings');
   });
 })

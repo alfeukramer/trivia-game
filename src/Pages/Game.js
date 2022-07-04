@@ -7,7 +7,7 @@ import { updateScore } from '../redux/actions';
 
 const correctAnswer = 'correct-answer';
 
-class Games extends React.Component {
+class Game extends React.Component {
 state = {
   questions: {},
   hashValidate: true,
@@ -61,10 +61,10 @@ state = {
       incorrectBackground: 'red' });
     const { questionsIndex, questions } = this.state;
     const { difficulty } = questions.results[questionsIndex];
-    let valorFinal = 0;
     const pontoFixo = 10;
     const hard = 3;
     if (obj.testId === correctAnswer) {
+      let valorFinal = 0;
       if (difficulty === 'hard') {
         valorFinal += pontoFixo + (hard * seconds);
       } else if (difficulty === 'medium') {
@@ -111,7 +111,6 @@ state = {
       this.scoreTimer = setInterval(() => {
         this.setState((prevState) => ({ seconds: prevState.seconds - 1 }));
       }, timer);
-      // clearInterval(this.scoreTimer);
     });
   }
 
@@ -124,7 +123,7 @@ state = {
       questions: requisicaoJson,
     });
     const tres = 3;
-    if (requisicaoJson.response_code === tres) {
+    if (requisicaoJson.response_code === tres || token === '') {
       localStorage.removeItem('token');
       this.setState({
         hashValidate: false,
@@ -144,9 +143,9 @@ state = {
   answers = () => {
     const { questions, questionsIndex } = this.state;
     const qstSelect = questions.results ? (
-      questions.results.find((qst, index) => (index === questionsIndex))
+      questions.results?.find((qst, index) => (index === questionsIndex))
     ) : '';
-    const respostas = [...qstSelect.incorrect_answers, qstSelect.correct_answer];
+    const respostas = [...qstSelect?.incorrect_answers, qstSelect.correct_answer];
     const respostasNew = [];
     respostas.forEach((resposta, index) => {
       const value = resposta === qstSelect.correct_answer ? (correctAnswer)
@@ -163,9 +162,9 @@ state = {
     const { hashValidate, questions,
       questionsIndex, loading,
       correctBackground, incorrectBackground, answers,
-      disableButtons, isHidden } = this.state;
+      disableButtons, isHidden, seconds } = this.state;
     const qstSelect = !loading ? (
-      questions.results.find((qst, index) => (index === questionsIndex))
+      questions.results?.find((qst, index) => (index === questionsIndex))
     ) : '';
     return (
       <div>
@@ -177,14 +176,15 @@ state = {
           !loading && (
             <div>
               <h3 data-testid="question-category">
-                {qstSelect.category}
+                {qstSelect?.category}
               </h3>
+              <h2 data-testid="timer">{ seconds }</h2>
               <p data-testid="question-text">
-                {qstSelect.question}
+                {qstSelect?.question}
               </p>
 
               <ul data-testid="answer-options">
-                {answers.map((resp, index) => {
+                {answers?.map((resp, index) => {
                   const value = resp.testId === correctAnswer ? (
                     correctBackground) : incorrectBackground;
                   return (
@@ -229,7 +229,7 @@ state = {
   }
 }
 
-Games.propTypes = {
+Game.propTypes = {
   token: PropTypes.string.isRequired,
   scoreAction: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
@@ -244,4 +244,4 @@ const mapDispatchToProps = (dispatch) => ({
   scoreAction: (numero) => dispatch(updateScore(numero)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Games);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
