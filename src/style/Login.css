@@ -1,0 +1,12 @@
+.login {
+background: rgb(140,155,193);
+background: radial-gradient(circle, rgb(16, 57, 161) 0%, rgb(0, 0, 0) 100%);
+font-size: larger;
+color: white;
+height: 100%;
+width: 100%;
+display: flex;
+place-items: center;
+justify-content: center;
+position: absolute;
+}
