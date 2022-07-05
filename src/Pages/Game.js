@@ -46,8 +46,7 @@ state = {
     const { correctBackground, stopTimer } = this.state;
     this.setState({ stopTimer: false, seconds: 30 });
     if (correctBackground === 'white' && !stopTimer) {
-      this.setState({
-        correctBackground: 'rgb(6, 240, 15)',
+      this.setState({ correctBackground: 'rgb(6, 240, 15)',
         incorrectBackground: 'red',
         disableButtons: true,
         isHidden: false });
@@ -75,9 +74,7 @@ state = {
       scoreAction(valorFinal);
       this.updateStorage(valorFinal);
     }
-    this.setState({
-      isHidden: false,
-    });
+    this.setState({ isHidden: false });
   }
 
   updateStorage = (score) => {
@@ -90,8 +87,7 @@ state = {
     const playerIndex = rankingClone.indexOf(playerInfo);
     rankingClone[playerIndex] = { ...playerInfo,
       assertions: sumAssertion,
-      score: sumScore,
-    };
+      score: sumScore };
     localStorage.setItem('ranking', JSON.stringify(rankingClone));
   }
 
@@ -119,15 +115,11 @@ state = {
     const URL = `https://opentdb.com/api.php?amount=5&token=${token}`;
     const requisicao = await fetch(URL);
     const requisicaoJson = await requisicao.json();
-    this.setState({
-      questions: requisicaoJson,
-    });
+    this.setState({ questions: requisicaoJson });
     const tres = 3;
     if (requisicaoJson.response_code === tres || token === '') {
       localStorage.removeItem('token');
-      this.setState({
-        hashValidate: false,
-      });
+      this.setState({ hashValidate: false });
     }
   }
 
@@ -157,15 +149,20 @@ state = {
     this.setState({ answers: respostasNew });
   }
 
+  colorDecider(string) {
+    if (string === 'correct-answer') {
+      return '3px solid rgb(6, 240, 15)';
+    }
+    return '3px solid red';
+  }
+
   render() {
     const lastQuestion = 4;
     const { hashValidate, questions,
-      questionsIndex, loading,
-      correctBackground, incorrectBackground, answers,
+      questionsIndex, loading, correctBackground, incorrectBackground, answers,
       disableButtons, isHidden, seconds } = this.state;
     const qstSelect = !loading ? (
-      questions.results?.find((qst, index) => (index === questionsIndex))
-    ) : '';
+      questions.results?.find((qst, index) => (index === questionsIndex))) : '';
     return (
       <div>
         {
@@ -191,7 +188,7 @@ state = {
                     <button
                       data-testid={ resp.testId }
                       style={ { backgroundColor: value,
-                        // border: value !== 'white' ? (`3px solid ${value}`) : ''
+                        border: value !== 'white' && this.colorDecider(resp.testId),
                       } }
                       key={ index }
                       type="button"
