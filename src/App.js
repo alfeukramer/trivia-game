@@ -6,6 +6,7 @@ import Game from './Pages/Game';
 import Settings from './Pages/Settings';
 import Feedback from './Pages/Feedback';
 import Ranking from './Pages/Ranking';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
   return (
