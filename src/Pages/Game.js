@@ -191,7 +191,8 @@ state = {
                     <button
                       data-testid={ resp.testId }
                       style={ { backgroundColor: value,
-                        border: value !== 'white' && `3px solid ${value}` } }
+                        // border: value !== 'white' ? (`3px solid ${value}`) : ''
+                      } }
                       key={ index }
                       type="button"
                       onClick={ () => this.onClick(resp) }
