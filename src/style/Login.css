@@ -1,8 +1,7 @@
 .login {
-background: rgb(140,155,193);
-background: radial-gradient(circle, rgb(16, 57, 161) 0%, rgb(0, 0, 0) 100%);
+background: radial-gradient(circle, rgb(94,190,131) 0%, rgb(0,48,36) 100%);
 font-size: larger;
-color: white;
+color: rgb(0, 0, 0);
 height: 100%;
 width: 100%;
 display: flex;

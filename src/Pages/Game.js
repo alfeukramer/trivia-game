@@ -1,9 +1,13 @@
+/* eslint-disable max-lines */
+/* eslint-disable no-unused-vars */
+/* eslint-disable max-lines */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import Header from '../Components/Header';
 import { updateScore } from '../redux/actions';
+import '../style/Game.css';
 
 const correctAnswer = 'correct-answer';
 
@@ -46,7 +50,7 @@ state = {
     const { correctBackground, stopTimer } = this.state;
     this.setState({ stopTimer: false, seconds: 30 });
     if (correctBackground === 'white' && !stopTimer) {
-      this.setState({ correctBackground: 'rgb(6, 240, 15)',
+      this.setState({ correctBackground: 'rgb(0,48,36)',
         incorrectBackground: 'red',
         disableButtons: true,
         isHidden: false });
@@ -56,7 +60,7 @@ state = {
   onClick = (obj) => {
     const { scoreAction } = this.props;
     const { seconds } = this.state;
-    this.setState({ correctBackground: 'rgb(6, 240, 15)',
+    this.setState({ correctBackground: 'rgb(0,48,36)',
       incorrectBackground: 'red' });
     const { questionsIndex, questions } = this.state;
     const { difficulty } = questions.results[questionsIndex];
@@ -149,11 +153,18 @@ state = {
     this.setState({ answers: respostasNew });
   }
 
+  blinker = () => {
+    const { seconds } = this.state;
+    const alertTime = 10;
+    if (seconds <= alertTime) {
+      return 'blinker';
+    }
+  }
+
   colorDecider(string) {
     if (string === 'correct-answer') {
-      return '3px solid rgb(6, 240, 15)';
+      return '6px solid rgb(110,218,44)';
     }
-    return '3px solid red';
   }
 
   render() {
@@ -164,31 +175,39 @@ state = {
     const qstSelect = !loading ? (
       questions.results?.find((qst, index) => (index === questionsIndex))) : '';
     return (
-      <div>
+      <div className="login-background">
         {
           !hashValidate && <Redirect to="/" />
         }
         <Header />
         {
           !loading && (
-            <div>
-              <h3 data-testid="question-category">
+            <div className="text-center game-screen d-flex flex-column">
+              <h1
+                className="title-category"
+                data-testid="question-category"
+                style={ { color: 'white' } }
+              >
                 {qstSelect?.category}
-              </h3>
-              <h2 data-testid="timer">{ seconds }</h2>
-              <p data-testid="question-text">
-                {qstSelect?.question}
-              </p>
+              </h1>
+              <h2 data-testid="timer" className={ this.blinker() }>{ seconds }</h2>
+              <div className="questions-board">
+                <h3 data-testid="question-text">
+                  {qstSelect?.question}
+                </h3>
+              </div>
 
-              <ul data-testid="answer-options">
+              <ul className="d-flex flex-column justify-content-center ask-board" data-testid="answer-options">
                 {answers?.map((resp, index) => {
                   const value = resp.testId === correctAnswer ? (
                     correctBackground) : incorrectBackground;
                   return (
                     <button
+                      className="btn btn-outline-dark fs-2"
                       data-testid={ resp.testId }
-                      style={ { backgroundColor: value,
+                      style={ { fontWeight: 'bolder',
                         border: value !== 'white' && this.colorDecider(resp.testId),
+                        color: value !== 'white' && 'white',
                       } }
                       key={ index }
                       type="button"
@@ -200,28 +219,30 @@ state = {
                   );
                 })}
               </ul>
+              { !isHidden && questionsIndex < lastQuestion && (
+                <button
+                  className="btn btn-light"
+                  type="button"
+                  data-testid="btn-next"
+                  onClick={ this.nextClick }
+                >
+                  Next
+                </button>
+              )}
+              <Link to="/feedback">
+                { questionsIndex === lastQuestion && (
+                  <button
+                    className="btn btn-outline-success"
+                    type="button"
+                    data-testid="btn-next"
+                  >
+                    Next
+                  </button>
+                )}
+              </Link>
             </div>
           )
         }
-        { !isHidden && questionsIndex < lastQuestion && (
-          <button
-            type="button"
-            data-testid="btn-next"
-            onClick={ this.nextClick }
-          >
-            Next
-          </button>
-        )}
-        <Link to="/feedback">
-          { questionsIndex === lastQuestion && (
-            <button
-              type="button"
-              data-testid="btn-next"
-            >
-              Next
-            </button>
-          )}
-        </Link>
       </div>
     );
   }

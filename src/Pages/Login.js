@@ -58,6 +58,7 @@ class Login extends React.Component {
             Name
             <br />
             <input
+              style={ { borderRadius: '5px' } }
               type="text"
               id="name"
               data-testid="input-player-name"
@@ -69,6 +70,7 @@ class Login extends React.Component {
             Email
             <br />
             <input
+              style={ { borderRadius: '5px' } }
               type="email"
               id="email"
               data-testid="input-gravatar-email"
@@ -78,7 +80,7 @@ class Login extends React.Component {
           </label>
           <br />
           <Button
-            className="btn btn-info"
+            className="btn btn-light"
             type="button"
             data-testid="btn-play"
             disabled={ isDisabled }

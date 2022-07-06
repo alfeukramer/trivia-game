@@ -1,0 +1,41 @@
+.blinker {
+    animation: blinker 1s linear infinite;
+    color: red;
+  }
+  @keyframes blinker {
+    50% { opacity: 0; }
+  }
+
+  .login-background{
+      background-color: rgb(0,189,130);
+      min-height: 100%;
+      min-width: 100%;
+      position: absolute;
+      display: flex;
+  }
+
+  .game-screen{
+    height: 40%;
+    width: 40%;
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 30%;
+    left: 35%;
+  }
+
+  .questions-board{
+      border: 5px dotted white;
+      padding: 20px;
+  }
+
+  .ask-board{
+    padding: 20px;
+    width: 60%;
+  }
+
+  .title-category{
+      text-shadow: 0 0 10px black ;
+      
+  }
