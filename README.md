@@ -2,7 +2,7 @@
 
 <h3>Projeto feito em conjunto no módulo de Front-End da Trybe.</h3>
 
-Usamos as bibliotecas ReactJS e Redux para desenvolver.
+<h5>Usamos as bibliotecas ReactJS e Redux para desenvolver.</h5>
 <br>
 React is a JavaScript library for building user interfaces.
 <br>
