@@ -8,8 +8,9 @@ Redux is a predictable state container for JavaScript apps.
 
 <h4>Instalação</h4>
 
-Use o comando: `git clone git@github.com:alfeukramer/trivia-game.git`
+Use o comando:
+`git clone git@github.com:alfeukramer/trivia-game.git`
 
 <h4>Dependências</h4>
-
+Use o comando:
 `npm install`
